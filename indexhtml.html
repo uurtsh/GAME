@@ -1,0 +1,417 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Friend Time Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff6b88;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 136, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff6b88;
+            transform: rotate(45deg);
+            animation: float 5s infinite ease-in-out;
+            opacity: 0.7;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-color: #ff6b88;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart:before {
+            top: -15px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -15px;
+        }
+        
+        .question-container {
+            margin: 30px 0;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option {
+            background: #ff6b88;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 136, 0.4);
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 136, 0.6);
+            background: #ff477e;
+        }
+        
+        .option:active {
+            transform: translateY(1px);
+        }
+        
+        .timer {
+            font-size: 1.2rem;
+            color: #ff6b88;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .score {
+            font-size: 1.3rem;
+            color: #333;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .result {
+            font-size: 1.8rem;
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b88;
+            margin-top: 30px;
+            text-shadow: 0 0 10px rgba(255, 107, 136, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .restart {
+            background: #6b5bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 91, 255, 0.4);
+            margin-top: 20px;
+        }
+        
+        .restart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(107, 91, 255, 0.6);
+            background: #5a4bdf;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confettiFall 5s linear infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255, 107, 136, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 107, 136, 0.8), 0 0 30px rgba(255, 107, 136, 0.6); }
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(45deg) translateY(0) translateX(0); }
+            50% { transform: rotate(45deg) translateY(-20px) translateX(10px); }
+            100% { transform: rotate(45deg) translateY(0) translateX(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .option {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RUCHI<br>Best Friend Quiz Time!</h1>
+        <div id="game-area">
+            <div class="question-container">
+                <div class="question" id="question">Get ready to test your best friend knowledge!</div>
+                <div class="options" id="options"></div>
+            </div>
+            <div class="timer" id="timer">Time: 30s</div>
+            <div class="score" id="score">Score: 0</div>
+            <button class="restart" id="start-btn">Start Game</button>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = [
+                {
+                    question: "What's your best friend's favorite color?",
+                    options: ["Pink", "Blue", "Purple", "I don't remember..."],
+                    correct: 0
+                },
+                {
+                    question: "When is your best friend's birthday?",
+                    options: ["January", "Our friendship day", "I always forget the date", "Same as mine!"],
+                    correct: 1
+                },
+                {
+                    question: "What would your best friend do if you were sad?",
+                    options: ["Give me space", "Send memes to cheer me up", "Call me immediately", "Bring ice cream"],
+                    correct: 2
+                },
+                {
+                    question: "How long have you been best friends?",
+                    options: ["Since childhood", "A few years", "Feels like forever!", "We just clicked recently"],
+                    correct: 2
+                },
+                {
+                    question: "What's your best friend's most used emoji?",
+                    options: ["😂", "❤️", "😭", "🤦‍♀️"],
+                    correct: 0
+                },
+                {
+                    question: "What would your best friend's superpower be?",
+                    options: ["Making people laugh", "Always being there", "Giving perfect advice", "Reading minds"],
+                    correct: 1
+                },
+                {
+                    question: "Where would your best friend want to go on vacation?",
+                    options: ["Beach", "Mountains", "City adventure", "Staycation at home"],
+                    correct: 0
+                },
+                {
+                    question: "What's your best friend's go-to karaoke song?",
+                    options: ["Pop anthem", "Cheesy love song", "Something dramatic", "We don't sing, we rap!"],
+                    correct: 0
+                }
+            ];
+
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const timerElement = document.getElementById('timer');
+            const scoreElement = document.getElementById('score');
+            const resultElement = document.getElementById('result');
+            const startButton = document.getElementById('start-btn');
+            
+            let currentQuestion = 0;
+            let score = 0;
+            let timeLeft = 30;
+            let timer;
+            let gameStarted = false;
+            
+            // Create floating hearts
+            createHearts();
+            
+            startButton.addEventListener('click', startGame);
+            
+            function startGame() {
+                if (gameStarted) {
+                    // Restart game
+                    currentQuestion = 0;
+                    score = 0;
+                    timeLeft = 30;
+                    resultElement.textContent = '';
+                    updateScore();
+                }
+                
+                gameStarted = true;
+                startButton.textContent = 'Restart Game';
+                startTimer();
+                showQuestion();
+            }
+            
+            function startTimer() {
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    timerElement.textContent = `Time: ${timeLeft}s`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        endGame();
+                    }
+                }, 1000);
+            }
+            
+            function showQuestion() {
+                if (currentQuestion >= questions.length) {
+                    endGame();
+                    return;
+                }
+                
+                const q = questions[currentQuestion];
+                questionElement.textContent = q.question;
+                optionsElement.innerHTML = '';
+                
+                q.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'option';
+                    button.textContent = option;
+                    button.addEventListener('click', () => selectAnswer(index));
+                    optionsElement.appendChild(button);
+                });
+            }
+            
+            function selectAnswer(selectedIndex) {
+                const q = questions[currentQuestion];
+                if (selectedIndex === q.correct) {
+                    score++;
+                    updateScore();
+                    createConfetti();
+                }
+                
+                currentQuestion++;
+                if (currentQuestion < questions.length && timeLeft > 0) {
+                    showQuestion();
+                } else {
+                    endGame();
+                }
+            }
+            
+            function updateScore() {
+                scoreElement.textContent = `Score: ${score}/${questions.length}`;
+            }
+            
+            function endGame() {
+                clearInterval(timer);
+                questionElement.textContent = "Game Over!";
+                optionsElement.innerHTML = '';
+                
+                const percentage = Math.round((score / questions.length) * 100);
+                let message = '';
+                
+                if (percentage >= 80) {
+                    message = "You're an amazing best friend! 💖";
+                } else if (percentage >= 50) {
+                    message = "Good job! But there's more to learn about your BFF! 😊";
+                } else {
+                    message = "Hmm... maybe spend more time with your bestie! 😉";
+                }
+                
+                resultElement.textContent = `${message} You scored ${score}/${questions.length}`;
+                
+                if (percentage >= 80) {
+                    createConfetti(true);
+                }
+            }
+            
+            function createHearts() {
+                for (let i = 0; i < 15; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.style.left = `${Math.random() * 100}vw`;
+                    heart.style.top = `${Math.random() * 100}vh`;
+                    heart.style.width = `${10 + Math.random() * 20}px`;
+                    heart.style.height = heart.style.width;
+                    heart.style.animationDelay = `${Math.random() * 5}s`;
+                    document.body.appendChild(heart);
+                }
+            }
+            
+            function createConfetti(largeAmount = false) {
+                const colors = ['#ff6b88', '#6b5bff', '#ffcc5c', '#88ff6b', '#ff914d'];
+                const amount = largeAmount ? 100 : 30;
+                
+                for (let i = 0; i < amount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = `${5 + Math.random() * 10}px`;
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.animationDuration = `${3 + Math.random() * 4}s`;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
